@@ -1,3 +1,5 @@
+import numpy as np
+import matplotlib.pyplot as plt
 def f1(i):
     return 1
 def fx(i):
@@ -13,13 +15,6 @@ def fx5(i):
 def fx6(i):
     return i**6
 
-"""
-    Exemplo da matriz A
-    A = [[0,0,0]
-         [0,0,0]
-         [0,0,0]
-        ]
-"""
 def Somatorio(fLinha, fColuna, valoresX, valoresY):
     soma = 0.0
     if fColuna is None:
@@ -30,19 +25,7 @@ def Somatorio(fLinha, fColuna, valoresX, valoresY):
         for i in valoresX:
             soma += fLinha(i)*fColuna(i)
         return soma
-"""
-              f(x)=1 f(x)=x f(x)=x²
-    f(x)=1  [ 4.0   15.0   79.0  ]
-    f(x)=x  [ 15.0  79.0   477.0 ]
-    f(x)=x² [ 79.0  477.0  3043.0]
-    
-    [ 4.0 15.0][b]=[19.4]
-    [15.0 79.0][a]=[96.5]
-    
-    a = 0.94 , b = 1.04
-    
-    f(x)=0.94x + 1.04
-"""
+
 def MontaMatriz(func, valoresX, valoresY):
     A = []
     b = []
@@ -61,13 +44,28 @@ def MostrarMatriz(A,b):
     for linha in A:
         print(f"{linha} [{subAlf[reverseindex]}] = {round(b[A.index(linha)],2)}")
         reverseindex-=1
+        
+def GeraGrafico(f,x,y):
+    conjX = np.linspace(min(x), max(x), 2000)
+    conjY = []
+    index = -1
+    for item in conjX:
+        conjY.append(0)
+        for func in f:
+            conjY[index] += coeficientes[f.index(func)]*func(item)
+    plt.scatter(x,y)
+    plt.plot(conjX,conjY,'red')
+    plt.show()
   
-      
-A, b = MontaMatriz([f1,fx],[1,2,5,7],[2.1,2.9,6.1,8.3])
+x = [2.5, 3.8, 5.8, 4.2, 6.6, 3, 3.4, 7.4, 6.6, 1.9]
+y = [0.9, 1.2, 1.6, 1.42, 1.75, 1.10, 1.2, 2, 1.96, 0.58]
+f = [f1,np.log]
+A, b = MontaMatriz(f,x,y)
 MostrarMatriz(A,b)
 
 
-import numpy.linalg as lg
-c = lg.solve(A,b)
 
-print(f'f(x)= {round(c[0], 2)}x + {round(c[1],2)}')
+coeficientes = np.linalg.solve(A,b)
+GeraGrafico(f,x,y)
+
+
